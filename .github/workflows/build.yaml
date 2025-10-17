@@ -3,9 +3,8 @@ jobs:
   build-factorial:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v5
       - run: |
-          git clone --depth=1 --branch "$GITHUB_REF_NAME" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" repos
-          cd repos
           sudo apt-get install emscripten
           emcc factorial.c -o factorial.html
           git add .
