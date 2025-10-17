@@ -1,0 +1,15 @@
+on: [push]
+jobs:
+  build-factorial:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          git clone --depth=1 --branch "$GITHUB_REF_NAME" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" repos
+          cd repos
+          apt install emscripten
+          emcc factorial.c -o factorial.html
+          git add .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Build factorial"
+          git push
