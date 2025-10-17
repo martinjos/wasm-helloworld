@@ -1,14 +1,16 @@
 on: [push]
 jobs:
-  build-factorial:
+  build:
+    if: github.ref_name == 'master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - run: |
           sudo apt-get install emscripten
           emcc factorial.c -o factorial.html
+          emcc hello.c -o hello.html
           git add .
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Build factorial"
+          git commit -m "Build wasm"
           git push
