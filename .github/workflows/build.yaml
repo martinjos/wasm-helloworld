@@ -6,7 +6,7 @@ jobs:
       - run: |
           git clone --depth=1 --branch "$GITHUB_REF_NAME" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" repos
           cd repos
-          apt install emscripten
+          sudo apt-get install emscripten
           emcc factorial.c -o factorial.html
           git add .
           git config user.name "github-actions[bot]"
