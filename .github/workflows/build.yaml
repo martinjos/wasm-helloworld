@@ -2,11 +2,14 @@ on:
   push:
     branches:
       - master
-  pull_request:
+  pull_request_target:
     branches:
       - master
+    types:
+      - closed
 jobs:
   build:
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
