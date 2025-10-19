@@ -4,23 +4,37 @@ on:
       - main
 jobs:
   build:
+    env:
+      ver: 0.0.1
+      msg: Second dev release
+      cancel: ''
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Check out repository
+        uses: actions/checkout@v5
+      - name: Check tag
         run: |
-          ver=0.0.0
           tag=v$ver
-          msg="First dev release"
+          echo "tag=$tag" >> "$GITHUB_ENV"
           # Fetch all tags
           git fetch origin 'refs/tags/*:refs/tags/*'
-          # Exit if tag already exists
-          if [ -n "$(git tag --list $tag)" ]; then exit 0; fi
+          # Cancel if tag already exists
+          if [ -n "$(git tag --list $tag)" ]; then echo 'cancel=true' >> "$GITHUB_ENV"; fi
+      - name: Get dependencies
+        if: ${{ ! env.cancel }}
+        run: |
           sudo rm /var/lib/man-db/auto-update
           sudo apt-get install -yq --no-install-recommends emscripten
+      - name: Build code
+        if: ${{ ! env.cancel }}
+        run: |
           emcc factorial.c -o factorial-$ver.html
           emcc hello.c -o hello-$ver.html
+      - name: Create release
+        if: ${{ ! env.cancel }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a $tag -m "$msg"
