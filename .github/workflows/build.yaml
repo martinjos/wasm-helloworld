@@ -13,6 +13,8 @@ jobs:
           ver=0.0.0
           tag=v$ver
           msg="First dev release"
+          # Fetch all tags
+          git fetch origin 'refs/tags/*:refs/tags/*'
           # Exit if tag already exists
           if [ -n "$(git tag --list $tag)" ]; then exit 0; fi
           sudo rm /var/lib/man-db/auto-update
