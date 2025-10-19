@@ -7,7 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: |
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           ver=0.0.0
           tag=v$ver
           msg="First dev release"
