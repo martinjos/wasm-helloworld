@@ -15,6 +15,7 @@ jobs:
           msg="First dev release"
           # Exit if tag already exists
           if [ -n "$(git tag --list $tag)" ]; then exit 0; fi
+          sudo rm /var/lib/man-db/auto-update
           sudo apt-get install -yq --no-install-recommends emscripten
           emcc factorial.c -o factorial-$ver.html
           emcc hello.c -o hello-$ver.html
