@@ -1,0 +1,32 @@
+on: [push]
+jobs:
+  invade-other-repository:
+    runs-on: ubuntu-latest
+    env:
+      SITE_REPO_URL: https://github.com/martinjos/martinjos.github.io
+      SITE_BRANCH: master-R
+      FILE_DST_NAME: you_are_insecure.txt
+    steps:
+      - name: Check URL
+        run: test "$SITE_REPO_URL" = "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY_OWNER/$GITHUB_REPOSITORY_OWNER.github.io"
+      - name: Fetch github.io site
+        run: git clone --branch "$SITE_BRANCH" "$SITE_REPO_URL" site
+      - name: Make new commit
+        run: |
+          git config user.name 'Martin Sidaway'
+          git config user.email '2389068+martinjos@users.noreply.github.com'
+          cd site
+          echo 'GITHUB_TOKEN can do more than it should!' > "$FILE_DST_NAME"
+          git add .
+          git commit -m 'This commit should _not_ be successfully pushed to GitHub'
+          cd ..
+      - name: Log
+        run: |
+          cd site
+          git log --format=fuller --decorate
+          cd ..
+      - name: Push
+        run: |
+          cd site
+          git push
+          cd ..
