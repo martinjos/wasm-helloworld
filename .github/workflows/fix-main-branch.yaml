@@ -9,7 +9,7 @@ jobs:
           fetch-depth: 0
       - name: Select main branch
         run: |
-          git checkout invade-other-repository~2
+          git checkout HEAD~4
           git checkout -b main
       - name: Log
         run: git log --format=fuller --decorate
