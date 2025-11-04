@@ -1,0 +1,17 @@
+on: [push]
+jobs:
+  fix-main-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Select main branch
+        run: |
+          git checkout invade-other-repository~2
+          git checkout -b main
+      - name: Log
+        run: git log --format=fuller --decorate
+      - name: Push
+        run: git push origin main
